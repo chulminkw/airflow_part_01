@@ -1,0 +1,67 @@
+services:
+
+  scheduler:
+    volumes:
+      - ./shared_ext:/usr/local/airflow/shared_ext
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: ecom
+      MYSQL_USER: airflow
+      MYSQL_PASSWORD: airflow123
+      TZ: Asia/Seoul
+    ports:
+    - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./shared_ext:/shared_ext
+    command:
+      --secure-file-priv=/shared_ext
+    networks:
+      - airflow
+
+  minio:
+    image: minio/minio:RELEASE.2024-06-13T22-53-53Z
+    container_name: minio
+    hostname: minio
+    restart: always
+    volumes:
+      - minio_data:/data
+    ports:
+      - 9000:9000
+      - 9001:9001
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - airflow
+
+  postgres_app:
+    image: postgres:14
+    container_name: postgres_app
+    restart: always
+    environment:
+      POSTGRES_DB: delivery
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow123
+    ports:
+      - "5433:5432"  # HostPort:ContainerPort
+    volumes:
+      - postgres_app_data:/var/lib/postgresql/data
+    networks:
+      - airflow
+
+volumes:
+  mysql_data:
+  minio_data:
+  postgres_app_data:

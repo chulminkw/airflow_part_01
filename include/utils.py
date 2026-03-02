@@ -41,25 +41,3 @@ def print_scheduling_variables(
         print(f"data_interval_start ~ data_interval_end in timezone: \
         {data_interval_start.in_timezone(timezone_value)} ~ {data_interval_end.in_timezone(timezone_value)}")
         
-        # print("\n========== PREVIOUS INTERVAL ==========")
-        # print(f"prev_data_interval_start: {prev_data_interval_start}")
-        # print(f"prev_data_interval_end: {prev_data_interval_end}")
-
-def print_scheduling_variables_01(context):
-        dag=context["dag"]
-        timezone_value=dag.timezone
-        ds=context["ds"]
-        logical_date=context["logical_date"],
-        data_interval_start=context["data_interval_start"],
-        data_interval_end=context["data_interval_end"]
-        print("========== DAG RUN ID & TIMEZONE ==========")
-        
-
-        print("\n========== DS, LOGICAL_DATE & DATA INTERVAL  ==========")
-        print(f"DS: {ds}, type:{type(ds)}")
-        print(f"logical_date: {logical_date}, type:{type(logical_date)}")
-        # print(f"logical_date in timezone: {logical_date.in_timezone('Asia/Seoul')}")
-        
-        print(f"data_interval_start ~ data_interval_end:{data_interval_start} ~ {data_interval_end}")
-        # print(f"data_interval_start ~ data_interval_end in timezone: \
-        # {data_interval_start.in_timezone(timezone_value)} ~ {data_interval_end.in_timezone(timezone_value)}")
